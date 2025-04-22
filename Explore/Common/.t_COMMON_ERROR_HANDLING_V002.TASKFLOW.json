@@ -1,0 +1,27 @@
+{
+  "objectInfo" : {
+    "id" : "0qAhhFV1CoYiSuSCjCnhs8",
+    "name" : "t_COMMON_ERROR_HANDLING_V002",
+    "type" : "TASKFLOW",
+    "metadata" : {
+      "modelVersion" : {
+        "major" : 1,
+        "minor" : 0
+      },
+      "repoInfo" : {
+        "repoHandle" : "beN7Y3AxtPk7HNC-gt-20814691-2024-07-15T19:26:30.028Z::tf.xml"
+      },
+      "contextAttributes" : null,
+      "additionalInfo" : {
+        "description" : "Combines the main common error handler and the \"Continue\" handler. Use this one only going forward.",
+        "contentType" : "application/json; charset=utf-8",
+        "documentState" : "VALID"
+      }
+    }
+  },
+  "dataFileExtension" : "xml",
+  "updateTime" : "2025-04-22T16:38:24.561Z",
+  "objectRefs" : [ ],
+  "readableFileExtension" : null,
+  "readableFilePresent" : false
+}

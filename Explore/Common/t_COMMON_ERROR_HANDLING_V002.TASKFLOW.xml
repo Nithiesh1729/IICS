@@ -1,0 +1,282 @@
+<aetgt:getResponse xmlns:aetgt="http://schemas.active-endpoints.com/appmodules/repository/2010/10/avrepository.xsd"
+                   xmlns:types1="http://schemas.active-endpoints.com/appmodules/repository/2010/10/avrepository.xsd">
+   <types1:Item>
+      <types1:EntryId>beN7Y3AxtPk7HNC-gt-20814691-2024-07-15T19:26:30.028Z::tf.xml</types1:EntryId>
+      <types1:Name>t_COMMON_ERROR_HANDLING_V002</types1:Name>
+      <types1:MimeType>application/xml+taskflow</types1:MimeType>
+      <types1:Description>Combines the main common error handler and the "Continue" handler. Use this one only going forward.</types1:Description>
+      <types1:AppliesTo/>
+      <types1:Tags/>
+      <types1:VersionLabel>1.0</types1:VersionLabel>
+      <types1:State>CURRENT</types1:State>
+      <types1:ProcessGroup/>
+      <types1:CreatedBy>jimsong</types1:CreatedBy>
+      <types1:CreationDate>2024-07-15T19:26:30Z</types1:CreationDate>
+      <types1:ModifiedBy/>
+      <types1:PublicationStatus>unpublished</types1:PublicationStatus>
+      <types1:Entry>
+         <taskflow xmlns="http://schemas.active-endpoints.com/appmodules/screenflow/2010/10/avosScreenflow.xsd"
+                   xmlns:tfm="http://schemas.active-endpoints.com/appmodules/screenflow/2021/04/taskflowModel.xsd"
+                   xmlns:list="urn:activevos:spi:list:functions"
+                   displayName="t_COMMON_ERROR_HANDLING_V002"
+                   name="t_COMMON_ERROR_HANDLING_V002"
+                   overrideAPIName="false">
+            <parameterSet xmlns="http://schemas.active-endpoints.com/appmodules/screenflow/2021/04/taskflowModel.xsd"/>
+            <appliesTo/>
+            <description>Combines the main common error handler and the "Continue" handler. Use this one only going forward.</description>
+            <tags/>
+            <generator>Informatica Process Designer 11</generator>
+            <input>
+               <parameter description="Number of Times to retry (Default 2 if not supplied)"
+                          name="in_RetryLimit"
+                          type="int">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </parameter>
+               <parameter description="Wait Time Seconds (Default 30 if not supplied)"
+                          name="in_WaitTime"
+                          type="int">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </parameter>
+               <parameter description=""
+                          name="in_TaskFlowName"
+                          required="true"
+                          type="string">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </parameter>
+               <parameter description="" name="in_Error" required="true" type="string">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </parameter>
+               <parameter description="Current Number of retries attempted"
+                          name="in_RetryCount"
+                          required="true"
+                          type="int">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </parameter>
+               <parameter description="Email addresses (in addition to admin defaults) to send notification to separated by commas"
+                          name="in_EmailTo"
+                          type="string">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </parameter>
+               <parameter description="Set to 1 to exclude admins from email notification"
+                          name="in_EmailAdminOverrideFlag"
+                          type="int">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </parameter>
+               <parameter description="Set to 1 to continue parent taskflow after this taskflow's execution"
+                          name="in_ContinueFlag"
+                          type="int">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </parameter>
+            </input>
+            <tempFields>
+               <field description="" name="RetryLimit" type="int">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </field>
+               <field description="" name="WaitTime" type="int">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </field>
+               <field description="" name="EmailTo" type="string">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </field>
+               <field description="" name="ContinueFlag" type="int">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </field>
+               <field description="" name="Error" type="string">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </field>
+            </tempFields>
+            <notes/>
+            <deployment skipIfRunning="false" suspendOnFault="false" tracingLevel="verbose">
+               <rest/>
+            </deployment>
+            <flow id="a">
+               <start id="b">
+                  <link id="kp8htew2" targetId="kp8htew1"/>
+               </start>
+               <assignment id="kp8htew1">
+                  <title>Apply Overrides</title>
+                  <operation source="formula" to="temp.RetryLimit">
+                     <expression language="XQuery">util:iif( util:isNull( $input.in_RetryLimit  ),
+2,
+$input.in_RetryLimit 
+)
+
+</expression>
+                  </operation>
+                  <operation source="formula" to="temp.WaitTime">
+                     <expression language="XQuery">util:iif( util:isNull( $input.in_WaitTime   ),
+30,
+$input.in_WaitTime 
+)</expression>
+                  </operation>
+                  <operation source="formula" to="temp.EmailTo">
+                     <expression language="XQuery">util:iif( 
+    util:iif(
+          util:isNull( $input.in_EmailAdminOverrideFlag),
+        0,
+        $input.in_EmailAdminOverrideFlag
+    ) = 0
+      or util:isNull( $input.in_EmailTo),
+      'joshsternitzky@berryglobal.com; tombent@berryglobal.com; jessechristensen@berryglobal.com;',
+    ''
+)
+||
+util:iif( 
+      util:isNull( $input.in_EmailTo),
+      '',
+      $input.in_EmailTo
+)</expression>
+                  </operation>
+                  <operation source="formula" to="temp.ContinueFlag">
+                     <expression language="XQuery">util:iif(
+	util:isNull($input.in_ContinueFlag ),
+    0,
+	$input.in_ContinueFlag
+)</expression>
+                  </operation>
+                  <operation source="constant" to="temp.Error">{$input.in_Error}</operation>
+                  <link id="kp8htew3" targetId="kp8htetw"/>
+               </assignment>
+               <container id="kp8htetw" type="exclusive">
+                  <title>Retry Limit Check</title>
+                  <flow id="kp8htetx">
+                     <assignment id="lckpwf4x">
+                        <title>If RetryCount Exceeds RetryLimit</title>
+                        <operation source="formula" to="temp.ContinueFlag">
+                           <expression language="XQuery">util:iif(
+	$temp.ContinueFlag = 1 
+    and $input.in_RetryCount &gt; $temp.RetryLimit , 
+    0, 
+    $temp.ContinueFlag
+)</expression>
+                        </operation>
+                        <operation source="formula" to="temp.Error">
+                           <expression language="XQuery">util:iif(
+	$input.in_RetryCount &gt; $temp.RetryLimit , 
+    'The retry count has exceeded the retry limit.  '|| $temp.Error, 
+    $temp.Error 
+)</expression>
+                        </operation>
+                        <link id="lckpwf4y" targetId="kp8htety"/>
+                     </assignment>
+                     <service id="kp8htety">
+                        <title>Failure Notification</title>
+                        <serviceName>emailNotificationService</serviceName>
+                        <serviceGUID/>
+                        <serviceInput>
+                           <parameter name="Email To" source="formula">
+                              <expression language="XQuery">$temp.EmailTo </expression>
+                           </parameter>
+                           <parameter name="Email Cc" source="constant"/>
+                           <parameter name="Email Subject" source="formula">
+                              <expression language="XQuery">util:iif(util:getOrganizationId() = 'kFCREt1YHueikzh0s4ZOsI',
+	'"DEV "', 
+util:iif(util:getOrganizationId() = '3bIUi54I1qheH7LtypnU4o',
+	'"TEST "',
+util:iif(util:getOrganizationId() = '9xMez7fsAw3kUCf7S0npSh',
+	'"PROD "'
+, '"Unknown Org"')
+)
+)
+||
+
+'Informatica Error: ' || $input.in_TaskFlowName </expression>
+                           </parameter>
+                           <parameter name="Email Content Type" source="constant">html</parameter>
+                           <parameter name="Email Body" source="constant">&lt;p&gt;Error: {$temp.Error}&lt;/p&gt;
+&lt;p&gt;Retry Count: {$input.in_RetryCount}&lt;/p&gt;</parameter>
+                        </serviceInput>
+                        <serviceOutput/>
+                        <link id="lcjljn7u" targetId="lcjljn7t"/>
+                     </service>
+                     <container id="lcjljn7t" type="exclusive">
+                        <title>ContinueFlag</title>
+                        <flow id="lcjljn7x">
+                           <jumpTo id="lcjljn9i">
+                              <link id="lcjljn9j" targetId="kp8hteur"/>
+                           </jumpTo>
+                        </flow>
+                        <flow id="lcjljn80">
+                           <link id="lcjljn81" targetId="lcjljn7t" type="containerLink"/>
+                        </flow>
+                        <link id="lcjljn7w" targetId="lcjljn7x" type="containerLink">
+                           <condition source="formula">
+                              <function name="equals">
+                                 <arg name="left">{$temp.ContinueFlag}</arg>
+                                 <arg name="right">{1}</arg>
+                              </function>
+                           </condition>
+                        </link>
+                        <link id="lcjljn7z" targetId="lcjljn80" type="containerLink"/>
+                        <link id="lcjljn7v" targetId="kp8htetz"/>
+                     </container>
+                     <throw id="kp8htetz">
+                        <title>Exit</title>
+                        <throwInput>
+                           <parameter name="code" source="constant" updatable="true">500</parameter>
+                           <parameter name="detail" source="constant" updatable="true"/>
+                           <parameter name="reason" source="constant" updatable="true"/>
+                        </throwInput>
+                     </throw>
+                  </flow>
+                  <flow id="kp8hteu0">
+                     <wait id="kp8hteu2">
+                        <title>Wait to Retry</title>
+                        <duration source="formula">
+                           <function name="duration_expression">
+                              <arg name="value">{$temp.WaitTime}</arg>
+                              <arg name="scale">S</arg>
+                              <arg name="businessDays"/>
+                           </function>
+                        </duration>
+                     </wait>
+                     <link id="kp8hteuu" targetId="kp8htetw" type="containerLink"/>
+                  </flow>
+                  <link id="kp8hteu4" targetId="kp8htetx" type="containerLink">
+                     <condition source="formula">
+                        <function name="greater-or-equals">
+                           <arg name="left">{$input.in_RetryCount}</arg>
+                           <arg name="right">{$temp.RetryLimit }</arg>
+                        </function>
+                     </condition>
+                  </link>
+                  <link id="kp8hteu5" targetId="kp8hteu0" type="containerLink"/>
+                  <link id="kp8hteus" targetId="kp8hteur"/>
+               </container>
+               <end id="kp8hteur">
+                  <title>End</title>
+               </end>
+            </flow>
+         </taskflow>
+      </types1:Entry>
+      <types1:GUID>0qAhhFV1CoYiSuSCjCnhs8</types1:GUID>
+      <types1:DisplayName>t_COMMON_ERROR_HANDLING_V002</types1:DisplayName>
+   </types1:Item>
+   <types1:CurrentServerDateTime>2025-04-22T16:38:24.353Z</types1:CurrentServerDateTime>
+</aetgt:getResponse>
